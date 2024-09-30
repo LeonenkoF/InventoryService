@@ -20,9 +20,10 @@ type HTTPServer struct {
 }
 
 type Db_connect struct {
-	User    string `yaml:"user" env-default:"7540"`
-	Dbname  string `yaml:"dbname"`
-	Sslmode string `yaml:"sslmode"`
+	User     string `yaml:"user" env-default:"7540"`
+	Password string `yaml:"password"`
+	Dbname   string `yaml:"dbname"`
+	Sslmode  string `yaml:"sslmode"`
 }
 
 func New() (*Config, error) {
@@ -31,11 +32,11 @@ func New() (*Config, error) {
 	configPath := "config.yml"
 
 	if configPath == "" {
-		return nil, errors.New("Config path is not set")
+		return nil, errors.New("config path is not set")
 	}
 
 	if err := cleanenv.ReadConfig(configPath, cfg); err != nil {
-		return nil, errors.New("Cannot read config")
+		return nil, errors.New("cannot read config")
 	}
 
 	return cfg, nil

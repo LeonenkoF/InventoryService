@@ -1,9 +1,9 @@
 package entity
 
 type Inventory struct {
-	Dep_id          string `json:"fk_dep_id"`
+	Dep_name        string `json:"dep_name"`
 	Inventory_id    int    `json:"inventory_id"`
-	Workplace_num   string `json:"workplace_num"`
+	Fk_dep_id       int    `json:"fk_dep_id"`
 	Full_name       string `json:"full_name"`
 	Pc_id           string `json:"pc_id"`
 	Inventory_num   string `json:"inventory_num"`

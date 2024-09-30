@@ -1,20 +1,26 @@
 CREATE TABLE department
 (
-	dep_id smallint PRIMARY KEY,
+	dep_id SERIAL PRIMARY KEY,
 	dep_name varchar(128)
 );
 
 CREATE TABLE inventory
 (
+	inventory_id SERIAL PRIMARY KEY,
 	fk_dep_id smallint REFERENCES department(dep_id),
-	inventory_id smallint PRIMARY KEY,
-	workplace_number varchar(16) NOT NULL,
 	full_name varchar(64) NOT NULL,
 	pc_id varchar(16) NOT NULL,
-	inventory_num varchar(16) NOT NULL,
+	invent_num varchar(16) NOT NULL,
 	invent_monitors text NOT NULL,
 	invent_printer text,
 	invent_MFU text,
 	invent_laptop text,
 	invent_other text
 )
+
+INSERT INTO inventory(fk_dep_id,full_name,pc_id,invent_num,invent_monitors,invent_printer,invent_mfu,invent_laptop,invent_other)
+VALUES(1,'Вяхирев Артём Игоревич','id249','C001','SAMSUNG SAM0592 (23.1") М002,Acer V193 М027','','','','')
+
+SELECT department.dep_name,inventory.full_name,inventory.pc_id,inventory.invent_num,inventory.invent_monitors,inventory.invent_printer,inventory.invent_mfu,inventory.invent_laptop,inventory.invent_other
+FROM inventory
+JOIN department ON department.dep_id = inventory.fk_dep_id;
