@@ -4,6 +4,7 @@ import (
 	entity "LeonenkoF/PC_inventory/internal/entities/PC_inventory"
 	"LeonenkoF/PC_inventory/pkg/config"
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -14,13 +15,12 @@ type Postgres struct {
 }
 
 func NewStorage(cfg *config.Db_connect) (*Postgres, error) {
-	connStr := "postgres://postgres:qwerty@localhost:5432/PC_inventory?sslmode=disable"
+	connStr := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=%s", cfg.User, cfg.Password, cfg.Dbname, cfg.Sslmode)
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Printf("Failed connect to database: %v", err)
 	}
-	defer db.Close()
 
 	return &Postgres{db: db}, nil
 
@@ -52,4 +52,19 @@ func (db *Postgres) GetInventory() ([]entity.Inventory, error) {
 		inventory = append(inventory, i)
 	}
 	return inventory, nil
+}
+
+func (db *Postgres) AddInventory(input entity.Inventory) error {
+
+	stmt, err := db.db.Query(`INSERT INTO inventory(fk_dep_id,full_name,pc_id,invent_num,invent_monitors,invent_printer,invent_mfu,invent_laptop,invent_other)
+	VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`, input.Fk_dep_id, input.Full_name, input.Pc_id, input.Inventory_num, input.Invent_monitors, input.Invent_printer, input.Invent_mfu, input.Invent_laptop, input.Invent_other)
+
+	if err != nil {
+		log.Printf("Postgres - AddInventory - Databese query error: %v", err)
+		return err
+	}
+
+	defer stmt.Close()
+
+	return nil
 }

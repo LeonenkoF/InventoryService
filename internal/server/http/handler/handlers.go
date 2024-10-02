@@ -12,4 +12,5 @@ func SetHandlers(router chi.Router, is *service.InventoryService) {
 	}
 
 	router.Get("/inventory", ir.GetAllInventory)
+	router.Post("/inventory", ir.AddNewInventory)
 }
