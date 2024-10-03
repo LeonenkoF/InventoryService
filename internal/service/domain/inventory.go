@@ -39,3 +39,14 @@ func (is *InventoryService) AddInventory(input entity.Inventory) error {
 
 	return nil
 }
+
+func (is *InventoryService) DeleteInventory(id int) error {
+
+	err := is.repo.DeleteInventoryPG(id)
+
+	if err != nil {
+		return fmt.Errorf("InventoryService - DeleteInventory - is.repo.Getinventory error: %v", err)
+	}
+
+	return nil
+}

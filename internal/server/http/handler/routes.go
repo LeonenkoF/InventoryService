@@ -55,3 +55,23 @@ func (ir *inventoryRoutes) AddNewInventory(w http.ResponseWriter, r *http.Reques
 	}
 
 }
+
+func (ir *inventoryRoutes) DeleteInventoryHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	input := entity.Inventory{}
+
+	err := json.NewDecoder(r.Body).Decode(&input)
+
+	if err != nil {
+		http.Error(w, `{"error": "ошибка десериализации JSON"}`, http.StatusBadRequest)
+		return
+	}
+
+	err = ir.is.DeleteInventory(input.Inventory_id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("inventoryRoutes - AddNewInventory - ir.is.AddNewInventory: %v", err), http.StatusBadRequest)
+		return
+	}
+
+}

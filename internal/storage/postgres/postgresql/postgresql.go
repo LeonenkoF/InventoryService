@@ -68,3 +68,17 @@ func (db *Postgres) AddInventory(input entity.Inventory) error {
 
 	return nil
 }
+
+func (db *Postgres) DeleteInventoryPG(id int) error {
+
+	stmt, err := db.db.Query("DELETE FROM Inventory WHERE inventory_id = $1", id)
+
+	if err != nil {
+		log.Printf("Postgres - DeleteInventory - Databese query error: %v", err)
+		return err
+	}
+
+	defer stmt.Close()
+
+	return nil
+}
