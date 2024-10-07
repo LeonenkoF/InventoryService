@@ -75,3 +75,29 @@ func (ir *inventoryRoutes) DeleteInventoryHandler(w http.ResponseWriter, r *http
 	}
 
 }
+
+func (ir *inventoryRoutes) signUp(w http.ResponseWriter, r *http.Request) {
+	var input entity.User
+
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		http.Error(w, fmt.Sprintf("invalid input body %v", err), http.StatusBadRequest)
+		return
+	}
+
+	id, err := ir.is.CreateUser(input)
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%v", err), http.StatusInternalServerError)
+		return
+	}
+
+	b, err := json.Marshal(map[string]interface{}{"id": id})
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("JSON encode error: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}

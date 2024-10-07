@@ -82,3 +82,29 @@ func (db *Postgres) DeleteInventoryPG(id int) error {
 
 	return nil
 }
+
+func (db *Postgres) CreateUser(input entity.User) (int, error) {
+	var id int
+
+	err := db.db.QueryRow("INSERT INTO users(name,username,password) VALUES($1,$2,$3) RETURNING user_id", input.Name, input.Username, input.Password).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (db *Postgres) GetUser(username, password string) (entity.User, error) {
+	var user entity.User
+
+	res, err := db.db.Query("SELECT user_id FROM users WHERE username=$1 ANB password=$2", username, password)
+
+	if err != nil {
+		return user, err
+	}
+
+	err = res.Scan(&user)
+	return user, err
+
+}
