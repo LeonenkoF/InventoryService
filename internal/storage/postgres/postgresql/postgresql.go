@@ -98,13 +98,12 @@ func (db *Postgres) CreateUser(input entity.User) (int, error) {
 func (db *Postgres) GetUser(username, password string) (entity.User, error) {
 	var user entity.User
 
-	res, err := db.db.Query("SELECT user_id FROM users WHERE username=$1 ANB password=$2", username, password)
+	fmt.Println(username, password)
 
-	if err != nil {
-		return user, err
-	}
+	res := db.db.QueryRow("SELECT * FROM users WHERE username=$1 AND password=$2", username, password)
 
-	err = res.Scan(&user)
+	err := res.Scan(&user.User_id, &user.Name, &user.Username, &user.Password)
+
 	return user, err
 
 }

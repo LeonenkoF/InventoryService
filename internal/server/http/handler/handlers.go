@@ -19,5 +19,6 @@ func SetHandlers(router chi.Router, is *service.InventoryService) {
 
 	router.Route("/auth", func(router chi.Router) {
 		router.Post("/sign-up", ir.signUp)
+		router.Post("/sign-in", ir.signIn)
 	})
 }
