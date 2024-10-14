@@ -12,8 +12,13 @@ import (
 const (
 	salt      = "ofgkmogmiamfgkdfgadfg"
 	tokenTTL  = time.Hour * 12
-	singinKey = "adfhkglsbjjngjlskn"
+	signinKey = "adfhkglsbjjngjlskn"
 )
+
+type tokenClaims struct {
+	jwt.RegisteredClaims
+	UserId int `json:"user_id"`
+}
 
 func (is *InventoryService) CreateUser(user entity.User) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
@@ -28,14 +33,15 @@ func (is *InventoryService) GenerateToken(user entity.User) (string, error) {
 		return "", err
 	}
 
-	token := jwt.New(jwt.SigningMethodHS256)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenTTL)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
+		user.User_id,
+	})
 
-	claims := token.Claims.(jwt.MapClaims)
-	claims["uid"] = user.User_id
-	claims["username"] = user.Username
-	claims["exp"] = tokenTTL
-
-	tokenString, err := token.SignedString([]byte(singinKey))
+	tokenString, err := token.SignedString([]byte(signinKey))
 
 	if err != nil {
 		return "", err
@@ -48,4 +54,24 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (is *InventoryService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("invalid signing method")
+		}
+
+		return []byte(signinKey), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenClaims)
+	if !ok {
+		return 0, fmt.Errorf("token claims are not of type *tokenClaims")
+	}
+
+	return claims.UserId, nil
 }

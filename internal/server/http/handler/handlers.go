@@ -13,12 +13,16 @@ func SetHandlers(router chi.Router, is *service.InventoryService) {
 
 	router.Route("/inventory", func(router chi.Router) {
 		router.Get("/", ir.GetAllInventory)
-		router.Post("/", ir.AddNewInventory)
-		router.Delete("/", ir.DeleteInventoryHandler)
 	})
 
 	router.Route("/auth", func(router chi.Router) {
-		router.Post("/sign-up", ir.signUp)
 		router.Post("/sign-in", ir.signIn)
+	})
+
+	router.Group(func(router chi.Router) {
+		router.Use(ir.userIdentity)
+		router.Post("/sign-up", ir.signUp)
+		router.Post("/inventory", ir.AddNewInventory)
+		router.Delete("/inventory", ir.DeleteInventoryHandler)
 	})
 }
