@@ -1,0 +1,128 @@
+basePath: /
+definitions:
+  entity.Inventory:
+    properties:
+      dep_name:
+        type: string
+      fk_dep_id:
+        type: integer
+      full_name:
+        type: string
+      invent_laptop:
+        type: string
+      invent_mfu:
+        type: string
+      invent_monitors:
+        type: string
+      invent_other:
+        type: string
+      invent_printer:
+        type: string
+      inventory_id:
+        type: integer
+      inventory_num:
+        type: string
+      pc_id:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      user_id:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:7540
+info:
+  contact: {}
+  description: API server for inventory service.
+  title: Inventory Service API
+  version: "1.0"
+paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Signs in
+      parameters:
+      - description: SignIn info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      responses: {}
+      summary: SignIn
+      tags:
+      - Auth
+  /inventory:
+    delete:
+      consumes:
+      - application/json
+      description: Delete item in inventory
+      parameters:
+      - description: item info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Inventory'
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteInventory
+      tags:
+      - Inventory
+    get:
+      description: Show inventory list
+      produces:
+      - application/json
+      responses: {}
+      summary: GetAllInventory
+      tags:
+      - Inventory
+    post:
+      consumes:
+      - application/json
+      description: Adds a new item in inventory
+      parameters:
+      - description: item info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Inventory'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: AddNewInventory
+      tags:
+      - Inventory
+  /sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Signs up
+      parameters:
+      - description: User info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      responses: {}
+      summary: SignUp
+      tags:
+      - Auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

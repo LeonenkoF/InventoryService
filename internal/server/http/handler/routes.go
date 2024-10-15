@@ -13,6 +13,12 @@ type inventoryRoutes struct {
 	is *service.InventoryService
 }
 
+// GetAllInventory godoc
+// @Summary      GetAllInventory
+// @Description  Show inventory list
+// @Tags         Inventory
+// @Produce      json
+// @Router       /inventory [get]
 func (ir *inventoryRoutes) GetAllInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -36,6 +42,15 @@ func (ir *inventoryRoutes) GetAllInventory(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+// AddNewInventory godoc
+// @Summary      AddNewInventory
+// @Security	 ApiKeyAuth
+// @Description  Adds a new item in inventory
+// @Tags         Inventory
+// @Accept		 json
+// @Produce      json
+// @Param        input body entity.Inventory true "item info"
+// @Router       /inventory [post]
 func (ir *inventoryRoutes) AddNewInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -56,6 +71,14 @@ func (ir *inventoryRoutes) AddNewInventory(w http.ResponseWriter, r *http.Reques
 
 }
 
+// DeleteInventory godoc
+// @Summary      DeleteInventory
+// @Security	 ApiKeyAuth
+// @Description  Delete item in inventory
+// @Tags         Inventory
+// @Accept		 json
+// @Param        input body entity.Inventory true "item info"
+// @Router       /inventory [delete]
 func (ir *inventoryRoutes) DeleteInventoryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -76,6 +99,13 @@ func (ir *inventoryRoutes) DeleteInventoryHandler(w http.ResponseWriter, r *http
 
 }
 
+// SignUp godoc
+// @Summary      SignUp
+// @Description  Signs up
+// @Tags         Auth
+// @Accept		 json
+// @Param        input body entity.User true "User info"
+// @Router       /sign-up [post]
 func (ir *inventoryRoutes) signUp(w http.ResponseWriter, r *http.Request) {
 	var input entity.User
 
@@ -102,6 +132,13 @@ func (ir *inventoryRoutes) signUp(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
+// SignIn godoc
+// @Summary      SignIn
+// @Description  Signs in
+// @Tags         Auth
+// @Accept		 json
+// @Param        input body entity.User true "SignIn info"
+// @Router       /auth/sign-in [post]
 func (ir *inventoryRoutes) signIn(w http.ResponseWriter, r *http.Request) {
 	var input entity.User
 

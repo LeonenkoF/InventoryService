@@ -11,6 +11,17 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// @title           Inventory Service API
+// @version         1.0
+// @description     API server for inventory service.
+
+// @host      localhost:7540
+// @BasePath  /
+
+// @securityDefinitions.apikey  ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	cfg, err := config.New()
 	if err != nil {
