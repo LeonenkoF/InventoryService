@@ -10,6 +10,12 @@ type InventoryService struct {
 	repo *storage.Postgres
 }
 
+type Inventory interface {
+	GetInventoryList() ([]entity.Inventory, error)
+	AddInventory(input entity.Inventory) error
+	DeleteInventory(id int) error
+}
+
 func NewInventoryService(r *storage.Postgres) *InventoryService {
 	return &InventoryService{
 		repo: r,

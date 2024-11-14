@@ -14,7 +14,19 @@ type Postgres struct {
 	db *sql.DB
 }
 
+type Inventory interface {
+	GetInventory() ([]entity.Inventory, error)
+	AddInventory(input entity.Inventory) error
+	DeleteInventoryPG(id int) error
+}
+
+type Authorization interface {
+	CreateUser(input entity.User) (int, error)
+	GetUser(username, password string) (entity.User, error)
+}
+
 func NewStorage(cfg *config.Db_connect) (*Postgres, error) {
+
 	connStr := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=%s", cfg.User, cfg.Password, cfg.Dbname, cfg.Sslmode)
 
 	db, err := sql.Open("postgres", connStr)

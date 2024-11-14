@@ -20,6 +20,12 @@ type tokenClaims struct {
 	UserId int `json:"user_id"`
 }
 
+type Authorization interface {
+	CreateUser(user entity.User) (int, error)
+	GenerateToken(user entity.User) (string, error)
+	ParseToken(accessToken string) (int, error)
+}
+
 func (is *InventoryService) CreateUser(user entity.User) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
 	return is.repo.CreateUser(user)
